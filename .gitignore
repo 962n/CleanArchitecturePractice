@@ -63,3 +63,13 @@ fastlane/Preview.html
 fastlane/screenshots
 fastlane/test_output
 fastlane/readme.md
+
+# Android Studio
+.gradle/
+.idea/
+gradle/
+build/
+gradlew
+gradlew.bat
+*.iml
+
