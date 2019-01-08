@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import com.example.a962n.cleanarchitecturepractice.databinding.ActivityMainBinding
+import com.example.a962n.cleanarchitecturepractice.presentation.SampleListActivity
 
 class MainActivity : AppCompatActivity() {
 

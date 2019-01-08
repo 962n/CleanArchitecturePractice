@@ -23,7 +23,7 @@ import android.support.v4.app.FragmentManager
  *
  * @param owner ライフサイクルオーナー
  */
-class DialogController(owner: LifecycleOwner) {
+class DialogController constructor(owner: LifecycleOwner) {
 
     /**
      * ダイアログのオペレーションクラス
@@ -128,7 +128,10 @@ class DialogController(owner: LifecycleOwner) {
      * @param tag    表示用のタグ
      * @param dialog 表示するダイアログフラグメント
      */
-    fun show(manager: FragmentManager, tag: String, dialog: DialogFragment) {
+    fun show(manager: FragmentManager?, tag: String, dialog: DialogFragment) {
+        if (manager == null) {
+            return
+        }
         if (currentState == Lifecycle.State.RESUMED) {
             dialog.show(manager, tag)
             return
@@ -143,7 +146,7 @@ class DialogController(owner: LifecycleOwner) {
      * @param manager 消去対象のダイアログを表示した際に使用したFragmentManager
      * @param tag 消去対象のダイアログを表示した際に使用したタグ
      */
-    fun dismiss(manager: FragmentManager, tag: String) {
+    fun dismiss(manager: FragmentManager?, tag: String) {
 
         //HACK 保留リストに対象のダイアログが存在すれば、保留リストから削除し、処理を終了する
         val deleteList = pendingQueue.filter { operation ->
@@ -155,7 +158,9 @@ class DialogController(owner: LifecycleOwner) {
         if (deleteList.isNotEmpty()) {
             return
         }
-
+        if (manager == null) {
+            return
+        }
         if (currentState == Lifecycle.State.RESUMED) {
             dismissIfNeed(manager, tag)
             return

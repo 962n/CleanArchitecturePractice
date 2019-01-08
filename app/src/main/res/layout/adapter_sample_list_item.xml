@@ -5,7 +5,7 @@
     <data>
         <variable
             name="view_entity"
-            type="com.example.a962n.cleanarchitecturepractice.SampleListItemView"/>
+            type="com.example.a962n.cleanarchitecturepractice.presentation.SampleListItemView"/>
 
     </data>
 

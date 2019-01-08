@@ -1,8 +1,9 @@
-package com.example.a962n.cleanarchitecturepractice
+package com.example.a962n.cleanarchitecturepractice.presentation
 
 import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
+import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.databinding.AdapterSampleListItemBinding
 import com.example.a962n.cleanarchitecturepractice.extension.inflater
 import kotlin.properties.Delegates
