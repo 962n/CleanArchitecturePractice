@@ -8,12 +8,14 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.a962n.cleanarchitecturepractice.NetworkHandler
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
+import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository
 import com.example.a962n.cleanarchitecturepractice.databinding.FragmentSampleListBinding
 import com.example.a962n.cleanarchitecturepractice.domain.impl.GetSampleList
 import com.example.a962n.cleanarchitecturepractice.extension.addGlobalLayoutOnce
@@ -25,11 +27,12 @@ class SampleListFragment : Fragment() {
     private lateinit var viewModel: SampleListViewModel
     private lateinit var binding: FragmentSampleListBinding
 
-    private inner class Factory(private val sampleListUseCases: SampleListUseCases) : ViewModelProvider.Factory {
+    private inner class Factory
+    constructor(private val sampleListUseCases: SampleListUseCases,private val repository: SampleListRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
             if (modelClass == SampleListViewModel::class.java)
-                return SampleListViewModel(sampleListUseCases) as T
+                return SampleListViewModel(sampleListUseCases,repository) as T
 
             throw IllegalArgumentException("Unknown ViewModel class : ${modelClass.name}")
         }
@@ -37,6 +40,8 @@ class SampleListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("hoge","Fragment onCreate thread name = " + Thread.currentThread().name)
+
         context?.let {
             initialize(it)
         }
@@ -47,7 +52,7 @@ class SampleListFragment : Fragment() {
         var repository = SampleListNetworkDummy(networkHandler)
         var useCase = GetSampleList(repository)
         var useCases = SampleListUseCases(useCase)
-        var factory = Factory(useCases)
+        var factory = Factory(useCases,repository)
 
         ViewModelProviders.of(this, factory).get(SampleListViewModel::class.java).let {
             viewModel = it
@@ -61,11 +66,14 @@ class SampleListFragment : Fragment() {
                     }
                 }
             }
-            observe(viewModel.list) { list ->
-                list?.apply {
-                    adapter.collections = this.toList()
-                }
+            observe(viewModel.pagedList) {
+                adapter.submitList(it)
             }
+//            observe(viewModel.list) { list ->
+//                list?.apply {
+//                    adapter.collections = this.toList()
+//                }
+//            }
 
         }
     }

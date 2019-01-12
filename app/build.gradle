@@ -53,6 +53,8 @@ dependencies {
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$archComponents_version"
     kapt "android.arch.lifecycle:compiler:$archComponents_version"
+    def page_version = "1.0.1"
+    implementation "android.arch.paging:runtime:$page_version"
 
 
     def dagger_version = '2.20'
