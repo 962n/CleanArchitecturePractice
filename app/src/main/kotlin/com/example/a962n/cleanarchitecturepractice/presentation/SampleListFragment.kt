@@ -25,7 +25,7 @@ class SampleListFragment : Fragment() {
     private lateinit var viewModel: SampleListViewModel
     private lateinit var binding: FragmentSampleListBinding
 
-    class Factory(private val sampleListUseCases: SampleListUseCases) : ViewModelProvider.Factory {
+    private inner class Factory(private val sampleListUseCases: SampleListUseCases) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
             if (modelClass == SampleListViewModel::class.java)
