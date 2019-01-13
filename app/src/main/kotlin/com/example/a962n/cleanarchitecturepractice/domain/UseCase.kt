@@ -2,7 +2,6 @@ package com.example.a962n.cleanarchitecturepractice.domain
 
 import com.example.a962n.cleanarchitecturepractice.data.Either
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
-import kotlinx.coroutines.*
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
@@ -14,16 +13,10 @@ import kotlinx.coroutines.*
  */
 abstract class UseCase<out Type, in Params> where Type : Any {
 
-    abstract suspend fun run(params: Params): Either<Failure, Type>
+    abstract fun run(params: Params): Either<Failure, Type>
 
-    operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
-
-        val job = CoroutineScope(Dispatchers.Default).async {
-            run(params)
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            onResult(job.await())
-        }
+    operator fun invoke(params: Params): Either<Failure, Type> {
+        return run(params)
     }
 
     class None

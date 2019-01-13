@@ -4,6 +4,7 @@ import android.arch.paging.PagedListAdapter
 import android.databinding.DataBindingUtil
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.ViewGroup
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.databinding.AdapterSampleListItemBinding
@@ -11,10 +12,6 @@ import com.example.a962n.cleanarchitecturepractice.extension.inflater
 import kotlin.properties.Delegates
 
 class SampleListAdapter : PagedListAdapter<SampleListItemView ,SampleListAdapter.ViewHolder>(COMPARATOR) {
-
-    var collections: List<SampleListItemView> by Delegates.observable(emptyList()) { _, _, _ ->
-        notifyDataSetChanged()
-    }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
@@ -28,12 +25,6 @@ class SampleListAdapter : PagedListAdapter<SampleListItemView ,SampleListAdapter
             holder.bind(this)
         }
     }
-
-
-
-//    override fun getItemCount(): Int {
-//        return collections.count()
-//    }
 
     class ViewHolder(private val binding: AdapterSampleListItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: SampleListItemView) {

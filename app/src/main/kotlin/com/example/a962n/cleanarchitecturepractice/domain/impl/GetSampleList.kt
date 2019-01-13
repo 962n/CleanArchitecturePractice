@@ -9,23 +9,9 @@ import com.example.a962n.cleanarchitecturepractice.domain.UseCase
 class GetSampleList
 constructor(private val repository: SampleListRepository) : UseCase<List<SampleListEntity>, GetSampleList.Param>() {
 
-    private var currentOffset = 0
-    private val limit = 20
-
-    override suspend fun run(params: Param): Either<Failure, List<SampleListEntity>> {
-        when (params) {
-            is Param.Refresh -> {
-                currentOffset = 0
-            }
-            is Param.LoadMore -> {
-                currentOffset += limit
-            }
-        }
-        return repository.list(currentOffset, limit)
+    override fun run(param: Param): Either<Failure, List<SampleListEntity>> {
+        return repository.list(param.offset, param.limit)
     }
 
-    sealed class Param {
-        object Refresh : Param()
-        object LoadMore : Param()
-    }
+    data class Param(val offset: Int, val limit: Int)
 }

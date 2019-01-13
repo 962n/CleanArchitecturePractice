@@ -67,14 +67,9 @@ class SampleListFragment : Fragment() {
                 }
             }
             observe(viewModel.pagedList) {
+                Log.d("hoge","submitList")
                 adapter.submitList(it)
             }
-//            observe(viewModel.list) { list ->
-//                list?.apply {
-//                    adapter.collections = this.toList()
-//                }
-//            }
-
         }
     }
 
@@ -96,8 +91,8 @@ class SampleListFragment : Fragment() {
         }
 
         binding.swipeRefresh.addGlobalLayoutOnce {
-            binding.swipeRefresh.isRefreshing = true
-            viewModel.refresh()
+//            binding.swipeRefresh.isRefreshing = true
+//            viewModel.refresh()
         }
     }
 

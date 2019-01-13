@@ -1,63 +1,53 @@
 package com.example.a962n.cleanarchitecturepractice.presentation
 
-import android.arch.lifecycle.LifecycleOwner
-import android.arch.lifecycle.LiveData
-import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.ViewModel
+import android.arch.lifecycle.*
+import android.arch.lifecycle.Transformations.switchMap
+import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.example.a962n.cleanarchitecturepractice.PendingLiveData
-import com.example.a962n.cleanarchitecturepractice.data.entity.SampleListEntity
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
 import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository
 import com.example.a962n.cleanarchitecturepractice.domain.impl.GetSampleList
 import com.example.a962n.cleanarchitecturepractice.extension.observe
+import com.example.a962n.cleanarchitecturepractice.presentation.SampleListViewDataSource.DataSourceResult
 
-class SampleListViewModel constructor(private val useCases: SampleListUseCases,private val repository: SampleListRepository) : ViewModel() {
+class SampleListViewModel constructor(private val useCases: SampleListUseCases, repository: SampleListRepository) : ViewModel() {
 
     private var failure: PendingLiveData<Failure> = PendingLiveData()
     private var success: PendingLiveData<Success> = PendingLiveData()
-    var pagedList:MutableLiveData<PagedList<SampleListItemView>> = MutableLiveData()
-    private var dataSource:SampleListViewDataSource
 
-    var list: MutableLiveData<MutableList<SampleListItemView>> = MutableLiveData()
+
+    var pagedList: LiveData<PagedList<SampleListItemView>>
+    private var factory: SampleListViewDataSourceFactory = SampleListViewDataSourceFactory(repository)
+    private var dataSourceObserver: Observer<DataSourceResult>
+    private var dataSourceResult: LiveData<DataSourceResult>
 
     init {
-        list.value = mutableListOf()
-        dataSource = SampleListViewDataSource(repository)
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPageSize(10)
-                .setInitialLoadSizeHint(10)
                 .build()
-        pagedList.value = PagedList.Builder(dataSource,config).build()
+        pagedList = LivePagedListBuilder(factory, config).build()
+
+        dataSourceObserver = Observer { it ->
+            //HACK dataSourceでの取得結果を検知したらViewModel用の結果通知に変換して、UI側へ通知する
+            when (it) {
+                is DataSourceResult.SuccessRefresh -> handleSuccess(Success.Refresh)
+                is DataSourceResult.SuccessLoadMore -> handleSuccess(Success.LoadMore)
+                is DataSourceResult.FailureLoadMore -> handleFailure(it.failure)
+                is DataSourceResult.FailureRefresh -> handleFailure(it.failure)
+            }
+        }
+        dataSourceResult = switchMap(factory.nowDataSource) { it.result }
+        dataSourceResult.observeForever(dataSourceObserver)
     }
 
     fun refresh() {
-        dataSource.invalidate()
-//        useCases.getSampleList(GetSampleList.Param.Refresh) {
-//            it.either(::handleFailure) { right ->
-//                success.value = Success.Refresh
-//                list.value?.clear()
-//                handleList(right)
-//            }
-//        }
+        factory.nowDataSource.value?.invalidate()
     }
 
-    fun loadMore() {
-        useCases.getSampleList(GetSampleList.Param.LoadMore) {
-            it.either(::handleFailure) { list ->
-                success.value = Success.LoadMore
-                handleList(list)
-            }
-        }
-    }
-
-
-    private fun handleList(sampleList: List<SampleListEntity>) {
-        list.value?.let { list ->
-            list.addAll(sampleList.map { SampleListItemView(it.name) })
-        }
-        list.value = list.value
+    private fun handleSuccess(success: Success) {
+        this.success.value = success
     }
 
     private fun handleFailure(failure: Failure) {
@@ -70,6 +60,11 @@ class SampleListViewModel constructor(private val useCases: SampleListUseCases,p
 
     fun success(owner: LifecycleOwner, observer: (Success?) -> Unit) {
         owner.observe(success, observer)
+    }
+
+    override fun onCleared() {
+        dataSourceResult.removeObserver(dataSourceObserver)
+        super.onCleared()
     }
 
     sealed class Success {
