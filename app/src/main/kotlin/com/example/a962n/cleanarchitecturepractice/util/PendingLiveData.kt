@@ -1,4 +1,4 @@
-package com.example.a962n.cleanarchitecturepractice
+package com.example.a962n.cleanarchitecturepractice.util
 
 import android.arch.lifecycle.*
 

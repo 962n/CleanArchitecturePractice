@@ -12,14 +12,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.a962n.cleanarchitecturepractice.NetworkHandler
+import com.example.a962n.cleanarchitecturepractice.util.NetworkHandler
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
-import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository
 import com.example.a962n.cleanarchitecturepractice.databinding.FragmentSampleListBinding
 import com.example.a962n.cleanarchitecturepractice.domain.impl.GetSampleList
-import com.example.a962n.cleanarchitecturepractice.extension.addGlobalLayoutOnce
 import com.example.a962n.cleanarchitecturepractice.extension.observe
+import com.example.a962n.cleanarchitecturepractice.util.pagedlist.DataSourceState
 
 class SampleListFragment : Fragment() {
 
@@ -28,11 +27,11 @@ class SampleListFragment : Fragment() {
     private lateinit var binding: FragmentSampleListBinding
 
     private inner class Factory
-    constructor(private val sampleListUseCases: SampleListUseCases,private val repository: SampleListRepository) : ViewModelProvider.Factory {
+    constructor(private val sampleListUseCases: SampleListUseCases) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
             if (modelClass == SampleListViewModel::class.java)
-                return SampleListViewModel(sampleListUseCases,repository) as T
+                return SampleListViewModel(sampleListUseCases) as T
 
             throw IllegalArgumentException("Unknown ViewModel class : ${modelClass.name}")
         }
@@ -40,7 +39,6 @@ class SampleListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("hoge","Fragment onCreate thread name = " + Thread.currentThread().name)
 
         context?.let {
             initialize(it)
@@ -52,26 +50,27 @@ class SampleListFragment : Fragment() {
         var repository = SampleListNetworkDummy(networkHandler)
         var useCase = GetSampleList(repository)
         var useCases = SampleListUseCases(useCase)
-        var factory = Factory(useCases,repository)
+        var factory = Factory(useCases)
 
-        ViewModelProviders.of(this, factory).get(SampleListViewModel::class.java).let {
-            viewModel = it
-            viewModel.failure(this) { failure ->
-                binding.swipeRefresh.isRefreshing = false
-            }
-            viewModel.success(this) {success ->
-                when(success){
-                    is SampleListViewModel.Success.Refresh -> {
-                        binding.swipeRefresh.isRefreshing = false
-                    }
-                }
-            }
-            observe(viewModel.pagedList) {
-                Log.d("hoge","submitList")
-                adapter.submitList(it)
-            }
+        viewModel = ViewModelProviders.of(this, factory).get(SampleListViewModel::class.java)
+        observe(viewModel.dataSourceState) {
+            binding.swipeRefresh.isRefreshing = it == DataSourceState.LoadingInit
+            adapter.setState(it)
+        }
+        adapter.setRetryListener {
+            viewModel.retry()
+        }
+        viewModel.failure(this) { failure ->
+
+        }
+        viewModel.success(this) { success ->
+
+        }
+        observe(viewModel.pagedList) { pagedList ->
+            adapter.submitList(pagedList)
         }
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var binding: FragmentSampleListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sample_list, container, false)
@@ -88,11 +87,6 @@ class SampleListFragment : Fragment() {
 
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.refresh()
-        }
-
-        binding.swipeRefresh.addGlobalLayoutOnce {
-//            binding.swipeRefresh.isRefreshing = true
-//            viewModel.refresh()
         }
     }
 

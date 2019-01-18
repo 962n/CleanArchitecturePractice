@@ -1,4 +1,4 @@
-package com.example.a962n.cleanarchitecturepractice
+package com.example.a962n.cleanarchitecturepractice.util
 
 import android.content.Context
 import com.example.a962n.cleanarchitecturepractice.extension.networkInfo

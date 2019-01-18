@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.data.impl
 
-import com.example.a962n.cleanarchitecturepractice.NetworkHandler
+import com.example.a962n.cleanarchitecturepractice.util.NetworkHandler
 import com.example.a962n.cleanarchitecturepractice.data.Either
 import com.example.a962n.cleanarchitecturepractice.data.entity.SampleListEntity
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure

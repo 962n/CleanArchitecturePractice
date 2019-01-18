@@ -1,49 +1,72 @@
 package com.example.a962n.cleanarchitecturepractice.presentation
 
 import android.arch.lifecycle.*
-import android.arch.lifecycle.Transformations.switchMap
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import com.example.a962n.cleanarchitecturepractice.PendingLiveData
+import com.example.a962n.cleanarchitecturepractice.util.PendingLiveData
+import com.example.a962n.cleanarchitecturepractice.data.Either
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
-import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository
+import com.example.a962n.cleanarchitecturepractice.data.map
 import com.example.a962n.cleanarchitecturepractice.domain.impl.GetSampleList
 import com.example.a962n.cleanarchitecturepractice.extension.observe
-import com.example.a962n.cleanarchitecturepractice.presentation.SampleListViewDataSource.DataSourceResult
+import com.example.a962n.cleanarchitecturepractice.util.pagedlist.AppPositionalDataSource.DataSourceListener
+import com.example.a962n.cleanarchitecturepractice.util.pagedlist.AppPositionalDataSourceFactory
+import com.example.a962n.cleanarchitecturepractice.util.pagedlist.DataSourceState
 
-class SampleListViewModel constructor(private val useCases: SampleListUseCases, repository: SampleListRepository) : ViewModel() {
+class SampleListViewModel constructor(private val useCases: SampleListUseCases) : ViewModel() {
 
     private var failure: PendingLiveData<Failure> = PendingLiveData()
     private var success: PendingLiveData<Success> = PendingLiveData()
 
-
     var pagedList: LiveData<PagedList<SampleListItemView>>
-    private var factory: SampleListViewDataSourceFactory = SampleListViewDataSourceFactory(repository)
-    private var dataSourceObserver: Observer<DataSourceResult>
-    private var dataSourceResult: LiveData<DataSourceResult>
+    var dataSourceState: MutableLiveData<DataSourceState> = MutableLiveData()
+    private var factory: AppPositionalDataSourceFactory<SampleListItemView>
+
+    private val dataSourceListener: DataSourceListener<SampleListItemView> = object : DataSourceListener<SampleListItemView> {
+        override fun loadInit(offset: Int, loadSize: Int): Either<Failure, List<SampleListItemView>> {
+            return getSampleList(offset, loadSize)
+        }
+
+        override fun loadMore(offset: Int, loadSize: Int): Either<Failure, List<SampleListItemView>> {
+            return getSampleList(offset, loadSize)
+        }
+
+        override fun onStateChange(state: DataSourceState) {
+            when(state) {
+                is DataSourceState.LoadInitFailed -> {
+                    // HACK 初回データ読み込みの場合はユーザーへ
+                    // なにがしかエラー通知(dialog or toast)する必要があるため、処理結果をUIヘ通知する
+                    handleFailure(state.reason)
+                }
+                else -> {
+                    //do nothing
+                }
+            }
+            dataSourceState.value = state
+        }
+    }
+
+    private fun getSampleList(offset: Int, loadSize: Int): Either<Failure, List<SampleListItemView>> {
+        val result = useCases.getSampleList(GetSampleList.Param(offset, loadSize))
+        return result.map { list -> list.map { SampleListItemView(it.name) } }
+    }
+
 
     init {
+        factory = AppPositionalDataSourceFactory(dataSourceListener)
         val config = PagedList.Config.Builder()
                 .setEnablePlaceholders(false)
                 .setPageSize(10)
                 .build()
         pagedList = LivePagedListBuilder(factory, config).build()
-
-        dataSourceObserver = Observer { it ->
-            //HACK dataSourceでの取得結果を検知したらViewModel用の結果通知に変換して、UI側へ通知する
-            when (it) {
-                is DataSourceResult.SuccessRefresh -> handleSuccess(Success.Refresh)
-                is DataSourceResult.SuccessLoadMore -> handleSuccess(Success.LoadMore)
-                is DataSourceResult.FailureLoadMore -> handleFailure(it.failure)
-                is DataSourceResult.FailureRefresh -> handleFailure(it.failure)
-            }
-        }
-        dataSourceResult = switchMap(factory.nowDataSource) { it.result }
-        dataSourceResult.observeForever(dataSourceObserver)
     }
 
     fun refresh() {
-        factory.nowDataSource.value?.invalidate()
+        factory.invalidate()
+    }
+
+    fun retry() {
+        factory.retryIfNeed()
     }
 
     private fun handleSuccess(success: Success) {
@@ -60,11 +83,6 @@ class SampleListViewModel constructor(private val useCases: SampleListUseCases, 
 
     fun success(owner: LifecycleOwner, observer: (Success?) -> Unit) {
         owner.observe(success, observer)
-    }
-
-    override fun onCleared() {
-        dataSourceResult.removeObserver(dataSourceObserver)
-        super.onCleared()
     }
 
     sealed class Success {
