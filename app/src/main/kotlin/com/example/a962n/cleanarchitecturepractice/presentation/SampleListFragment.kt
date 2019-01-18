@@ -8,16 +8,17 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.a962n.cleanarchitecturepractice.NetworkHandler
+import com.example.a962n.cleanarchitecturepractice.util.NetworkHandler
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
 import com.example.a962n.cleanarchitecturepractice.databinding.FragmentSampleListBinding
 import com.example.a962n.cleanarchitecturepractice.domain.impl.GetSampleList
-import com.example.a962n.cleanarchitecturepractice.extension.addGlobalLayoutOnce
 import com.example.a962n.cleanarchitecturepractice.extension.observe
+import com.example.a962n.cleanarchitecturepractice.util.pagedlist.DataSourceState
 
 class SampleListFragment : Fragment() {
 
@@ -25,7 +26,8 @@ class SampleListFragment : Fragment() {
     private lateinit var viewModel: SampleListViewModel
     private lateinit var binding: FragmentSampleListBinding
 
-    class Factory(private val sampleListUseCases: SampleListUseCases) : ViewModelProvider.Factory {
+    private inner class Factory
+    constructor(private val sampleListUseCases: SampleListUseCases) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
 
             if (modelClass == SampleListViewModel::class.java)
@@ -37,6 +39,7 @@ class SampleListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         context?.let {
             initialize(it)
         }
@@ -49,26 +52,25 @@ class SampleListFragment : Fragment() {
         var useCases = SampleListUseCases(useCase)
         var factory = Factory(useCases)
 
-        ViewModelProviders.of(this, factory).get(SampleListViewModel::class.java).let {
-            viewModel = it
-            viewModel.failure(this) { failure ->
-                binding.swipeRefresh.isRefreshing = false
-            }
-            viewModel.success(this) {success ->
-                when(success){
-                    is SampleListViewModel.Success.Refresh -> {
-                        binding.swipeRefresh.isRefreshing = false
-                    }
-                }
-            }
-            observe(viewModel.list) { list ->
-                list?.apply {
-                    adapter.collections = this.toList()
-                }
-            }
+        viewModel = ViewModelProviders.of(this, factory).get(SampleListViewModel::class.java)
+        observe(viewModel.dataSourceState) {
+            binding.swipeRefresh.isRefreshing = it == DataSourceState.LoadingInit
+            adapter.setState(it)
+        }
+        adapter.setRetryListener {
+            viewModel.retry()
+        }
+        viewModel.failure(this) { failure ->
 
         }
+        viewModel.success(this) { success ->
+
+        }
+        observe(viewModel.pagedList) { pagedList ->
+            adapter.submitList(pagedList)
+        }
     }
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var binding: FragmentSampleListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sample_list, container, false)
@@ -84,11 +86,6 @@ class SampleListFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         binding.swipeRefresh.setOnRefreshListener {
-            viewModel.refresh()
-        }
-
-        binding.swipeRefresh.addGlobalLayoutOnce {
-            binding.swipeRefresh.isRefreshing = true
             viewModel.refresh()
         }
     }
