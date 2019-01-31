@@ -5,24 +5,21 @@ import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
 import kotlinx.coroutines.*
 
 /**
- * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
- * This abstraction represents an execution unit for different use cases (this means than any use
- * case in the application should implement this contract).
- *
- * By convention each [AsyncUseCase] implementation will execute its job in a background thread
- * (kotlin coroutine) and will post the result in the UI thread.
+ * ユースケースの抽象クラス
+ * 各ユースケースは本クラス or [UseCase] を継承して実装してください。
+ * 各[AsyncUseCase]実装はそのジョブをバックグラウンドスレッドで実行してください。
+ * 結果についてはUIスレッドに投稿します。
+ * 同期的な処理を行いたい場合は[UseCase]を使用してください。
  */
 abstract class AsyncUseCase<out Type, in Params> where Type : Any {
 
-    abstract suspend fun run(params: Params): Either<Failure, Type>
+    abstract fun run(params: Params, onResult: (Either<Failure, Type>) -> Unit = {})
 
     operator fun invoke(params: Params, onResult: (Either<Failure, Type>) -> Unit = {}) {
-
-        val job = CoroutineScope(Dispatchers.Default).async {
-            run(params)
-        }
-        CoroutineScope(Dispatchers.Main).launch {
-            onResult(job.await())
+        run(params) {
+            CoroutineScope(Dispatchers.Main).launch {
+                onResult(it)
+            }
         }
     }
 
