@@ -16,6 +16,7 @@ import com.example.a962n.cleanarchitecturepractice.util.NetworkHandler
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
 import com.example.a962n.cleanarchitecturepractice.databinding.FragmentSampleListBinding
+import com.example.a962n.cleanarchitecturepractice.domain.impl.AsyncGetSampleList
 import com.example.a962n.cleanarchitecturepractice.domain.impl.GetSampleList
 import com.example.a962n.cleanarchitecturepractice.extension.observe
 import com.example.a962n.cleanarchitecturepractice.util.pagedlist.DataSourceState
@@ -48,7 +49,7 @@ class SampleListFragment : Fragment() {
     private fun initialize(context: Context) {
         var networkHandler = NetworkHandler(context)
         var repository = SampleListNetworkDummy(networkHandler)
-        var useCase = GetSampleList(repository)
+        var useCase = AsyncGetSampleList(repository)
         var useCases = SampleListUseCases(useCase)
         var factory = Factory(useCases)
 

@@ -34,6 +34,7 @@ constructor(private val listener: DataSourceListener<T>) : PositionalDataSource<
         }
     }
 
+
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
         postState(DataSourceState.LoadingMore)
         val result = listener.loadMore(params.startPosition, params.loadSize)
