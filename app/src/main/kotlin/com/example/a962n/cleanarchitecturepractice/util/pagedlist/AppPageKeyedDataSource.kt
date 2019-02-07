@@ -51,10 +51,10 @@ constructor(private val listener: DataSourceListener<K, T>) : PageKeyedDataSourc
         listener.loadInit(params.requestedLoadSize) { result ->
             result.either({ failure ->
                 handleRetry { loadInitial(params, callback) }
-                listener.onStateChange(DataSourceState.LoadInitFailed(failure))
+                postState(DataSourceState.LoadInitFailed(failure))
             }, { pageInfo ->
                 callback.onResult(pageInfo.list, pageInfo.prevKey, pageInfo.nextKey)
-                listener.onStateChange(DataSourceState.Loaded)
+                postState(DataSourceState.Loaded)
             })
         }
     }
