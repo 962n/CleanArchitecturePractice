@@ -1,7 +1,7 @@
 package com.example.a962n.cleanarchitecturepractice.util.pagedlist
 
 import android.arch.paging.PositionalDataSource
-import com.example.a962n.cleanarchitecturepractice.data.Either
+import coreComponent.kotlin.Either
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,8 +12,8 @@ class AppPositionalDataSource<T>
 constructor(private val listener: DataSourceListener<T>) : PositionalDataSource<T>() {
 
     interface DataSourceListener<V> {
-        fun loadInit(offset: Int, loadSize: Int):Either<Failure, List<V>>
-        fun loadMore(offset: Int, loadSize: Int):Either<Failure, List<V>>
+        fun loadInit(offset: Int, loadSize: Int): Either<Failure, List<V>>
+        fun loadMore(offset: Int, loadSize: Int): Either<Failure, List<V>>
         fun onStateChange(state: DataSourceState)
     }
 

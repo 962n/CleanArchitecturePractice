@@ -1,14 +1,15 @@
 package com.example.a962n.cleanarchitecturepractice.data.impl
 
 import com.example.a962n.cleanarchitecturepractice.util.NetworkHandler
-import com.example.a962n.cleanarchitecturepractice.data.Either
+import coreComponent.kotlin.Either
 import com.example.a962n.cleanarchitecturepractice.data.entity.SampleListEntity
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure.NetworkConnection
 import com.example.a962n.cleanarchitecturepractice.data.impl.exception.SampleListFailure.DataReadFailure
 import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository
+import javax.inject.Inject
 
-class SampleListNetworkDummy constructor(val handler: NetworkHandler) : SampleListRepository {
+class SampleListNetworkDummy @Inject constructor(val handler: NetworkHandler) : SampleListRepository {
 
     companion object {
         private const val MAX_SIZE = 100

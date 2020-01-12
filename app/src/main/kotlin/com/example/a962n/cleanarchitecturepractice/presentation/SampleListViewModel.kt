@@ -4,7 +4,7 @@ import android.arch.lifecycle.*
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
 import com.example.a962n.cleanarchitecturepractice.util.PendingLiveData
-import com.example.a962n.cleanarchitecturepractice.data.Either
+import coreComponent.kotlin.Either
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
 import com.example.a962n.cleanarchitecturepractice.domain.impl.AsyncGetSampleList
 import com.example.a962n.cleanarchitecturepractice.extension.observe

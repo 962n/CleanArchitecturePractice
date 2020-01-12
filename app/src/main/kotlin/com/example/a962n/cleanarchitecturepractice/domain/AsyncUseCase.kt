@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.domain
 
-import com.example.a962n.cleanarchitecturepractice.data.Either
+import coreComponent.kotlin.Either
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
 import kotlinx.coroutines.*
 

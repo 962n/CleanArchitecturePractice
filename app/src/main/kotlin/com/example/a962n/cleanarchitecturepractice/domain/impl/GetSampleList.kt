@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.domain.impl
 
-import com.example.a962n.cleanarchitecturepractice.data.Either
+import coreComponent.kotlin.Either
 import com.example.a962n.cleanarchitecturepractice.data.entity.SampleListEntity
 import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
 import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository

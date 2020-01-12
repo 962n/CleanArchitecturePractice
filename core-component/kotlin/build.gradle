@@ -1,0 +1,19 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    // kotlin
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    def kotlin_coroutines_version = "1.1.0"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
+
+    testImplementation 'junit:junit:4.12'
+
+    def mockito_version = '2.1.0'
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_version"
+}
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    test.java.srcDirs += 'src/test/kotlin'
+}
