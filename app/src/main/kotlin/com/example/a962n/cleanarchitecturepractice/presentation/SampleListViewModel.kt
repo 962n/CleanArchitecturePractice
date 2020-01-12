@@ -24,7 +24,7 @@ class SampleListViewModel constructor(private val useCases: SampleListUseCases) 
     private val pageKeyDataSourceListener: AppPageKeyedDataSource.DataSourceListener<String, SampleListItemView> = object : AppPageKeyedDataSource.DataSourceListener<String, SampleListItemView>() {
         override fun loadInit(requestSize: Int, onResult: (Either<Failure, AppPageKeyedDataSource.PageInfo<String, SampleListItemView>>) -> Unit) {
             useCases.getSampleList(AsyncGetSampleList.Param(0, requestSize)) { result ->
-                result.either({ failure ->
+                result.fold({ failure ->
                     onResult(Either.Left(failure))
                 }, { list ->
                     val mapList = list.map { SampleListItemView(it.name) }
@@ -40,7 +40,7 @@ class SampleListViewModel constructor(private val useCases: SampleListUseCases) 
         override fun loadAfter(param: AppPageKeyedDataSource.LoadParam<String>, onResult: (Either<Failure, AppPageKeyedDataSource.PageInfo<String, SampleListItemView>>) -> Unit) {
             val offset = param.key.toInt()
             useCases.getSampleList(AsyncGetSampleList.Param(offset, param.requestSize)) { result ->
-                result.either({ failure ->
+                result.fold({ failure ->
                     onResult(Either.Left(failure))
                 }, { list ->
                     val mapList = list.map { SampleListItemView(it.name) }

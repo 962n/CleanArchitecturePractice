@@ -38,7 +38,7 @@ constructor(private val listener: DataSourceListener<T>) : PositionalDataSource<
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) {
         postState(DataSourceState.LoadingMore)
         val result = listener.loadMore(params.startPosition, params.loadSize)
-        result.either(
+        result.fold(
                 {
                     handleRetry { loadRange(params, callback) }
                     postState(DataSourceState.LoadMoreFailed(it))
@@ -53,7 +53,7 @@ constructor(private val listener: DataSourceListener<T>) : PositionalDataSource<
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) {
         postState(DataSourceState.LoadingInit)
         val result = listener.loadInit(0, params.requestedLoadSize)
-        result.either(
+        result.fold(
                 {
                     handleRetry { loadInitial(params, callback) }
                     postState(DataSourceState.LoadInitFailed(it))

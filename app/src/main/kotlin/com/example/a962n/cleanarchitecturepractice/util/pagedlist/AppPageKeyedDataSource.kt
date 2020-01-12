@@ -49,7 +49,7 @@ constructor(private val listener: DataSourceListener<K, T>) : PageKeyedDataSourc
     override fun loadInitial(params: LoadInitialParams<K>, callback: LoadInitialCallback<K, T>) {
         postState(DataSourceState.LoadingInit)
         listener.loadInit(params.requestedLoadSize) { result ->
-            result.either({ failure ->
+            result.fold({ failure ->
                 handleRetry { loadInitial(params, callback) }
                 postState(DataSourceState.LoadInitFailed(failure))
             }, { pageInfo ->
@@ -62,7 +62,7 @@ constructor(private val listener: DataSourceListener<K, T>) : PageKeyedDataSourc
     override fun loadAfter(params: LoadParams<K>, callback: LoadCallback<K, T>) {
         postState(DataSourceState.LoadingMore)
         listener.loadAfter(LoadParam(params.requestedLoadSize, params.key)) { result ->
-            result.either({ failure ->
+            result.fold({ failure ->
                 handleRetry { loadAfter(params, callback) }
                 postState(DataSourceState.LoadMoreFailed(failure))
             }, { pageInfo ->
