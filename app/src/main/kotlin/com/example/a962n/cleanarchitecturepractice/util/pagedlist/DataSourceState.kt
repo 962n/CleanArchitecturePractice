@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.util.pagedlist
 
-import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
+import com.example.a962n.domain.exception.Failure
 
 sealed class DataSourceState {
     object Loaded : DataSourceState()

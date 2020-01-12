@@ -2,7 +2,7 @@ package com.example.a962n.cleanarchitecturepractice.util.pagedlist
 
 import android.arch.paging.PositionalDataSource
 import coreComponent.kotlin.Either
-import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
+import com.example.a962n.domain.exception.Failure
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

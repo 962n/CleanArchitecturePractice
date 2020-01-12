@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.presentation
 
-import com.example.a962n.cleanarchitecturepractice.domain.impl.AsyncGetSampleList
+import com.example.a962n.domain.useCase.sample.AsyncGetSampleList
 
 /**
  * 画面単位のユースケースをまとめるためのホルダークラス

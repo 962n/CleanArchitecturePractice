@@ -8,7 +8,6 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +15,7 @@ import com.example.a962n.cleanarchitecturepractice.util.NetworkHandler
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
 import com.example.a962n.cleanarchitecturepractice.databinding.FragmentSampleListBinding
-import com.example.a962n.cleanarchitecturepractice.domain.impl.AsyncGetSampleList
-import com.example.a962n.cleanarchitecturepractice.domain.impl.GetSampleList
+import com.example.a962n.domain.useCase.sample.AsyncGetSampleList
 import com.example.a962n.cleanarchitecturepractice.extension.observe
 import com.example.a962n.cleanarchitecturepractice.util.pagedlist.DataSourceState
 

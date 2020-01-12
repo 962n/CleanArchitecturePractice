@@ -4,6 +4,8 @@ dependencies {
     // kotlin
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    implementation project(":core-component:kotlin")
+
     def kotlin_coroutines_version = "1.1.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
 

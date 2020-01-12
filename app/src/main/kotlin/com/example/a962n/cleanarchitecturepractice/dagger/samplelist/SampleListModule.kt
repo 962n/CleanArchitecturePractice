@@ -2,7 +2,7 @@ package com.example.a962n.cleanarchitecturepractice.dagger.samplelist
 
 
 import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
-import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository
+import com.example.a962n.domain.repository.SampleListRepository
 import com.example.a962n.cleanarchitecturepractice.presentation.SampleListActivity
 import dagger.Binds
 import dagger.Module
@@ -18,6 +18,6 @@ abstract class SampleListActivityModule {
     abstract fun bindSampleListActivityInjectorFactory(builder: SampleListActivityComponent.Builder): AndroidInjector.Factory<*>
 
     @Binds
-    abstract fun provideSampleListRepository(dataSource: SampleListNetworkDummy):SampleListRepository
+    abstract fun provideSampleListRepository(dataSource: SampleListNetworkDummy): SampleListRepository
 
 }

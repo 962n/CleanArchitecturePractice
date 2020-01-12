@@ -1,4 +1,4 @@
-package com.example.a962n.cleanarchitecturepractice.data.exception
+package com.example.a962n.domain.exception
 
 /**
  * Base Class for handling errors/failures/exceptions.

@@ -1,10 +1,10 @@
-package com.example.a962n.cleanarchitecturepractice.domain.impl
+package com.example.a962n.domain.useCase.sample
 
 import coreComponent.kotlin.Either
-import com.example.a962n.cleanarchitecturepractice.data.entity.SampleListEntity
-import com.example.a962n.cleanarchitecturepractice.data.exception.Failure
-import com.example.a962n.cleanarchitecturepractice.data.repository.SampleListRepository
-import com.example.a962n.cleanarchitecturepractice.domain.UseCase
+import com.example.a962n.domain.entity.SampleListEntity
+import com.example.a962n.domain.exception.Failure
+import com.example.a962n.domain.repository.SampleListRepository
+import com.example.a962n.domain.useCase.core.UseCase
 
 class GetSampleList
 constructor(private val repository: SampleListRepository) : UseCase<List<SampleListEntity>, GetSampleList.Param>() {
