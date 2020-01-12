@@ -1,1 +1,1 @@
-include ':app', ':domain', ':core-component:kotlin'
+include ':app', ':domain', ':core-component:kotlin', ':data'
