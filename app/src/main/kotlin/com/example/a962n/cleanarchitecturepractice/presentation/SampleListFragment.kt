@@ -11,9 +11,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.a962n.cleanarchitecturepractice.util.NetworkHandler
 import com.example.a962n.cleanarchitecturepractice.R
-import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
 import com.example.a962n.cleanarchitecturepractice.databinding.FragmentSampleListBinding
 import com.example.a962n.domain.useCase.sample.AsyncGetSampleList
 import com.example.a962n.cleanarchitecturepractice.extension.observe
@@ -45,8 +43,8 @@ class SampleListFragment : Fragment() {
     }
 
     private fun initialize(context: Context) {
-        var networkHandler = NetworkHandler(context)
-        var repository = SampleListNetworkDummy(networkHandler)
+        var networkHandler = com.example.a962n.data.NetworkHandler(context)
+        var repository = com.example.a962n.data.repositoryImpl.SampleListNetworkDummy(networkHandler)
         var useCase = AsyncGetSampleList(repository)
         var useCases = SampleListUseCases(useCase)
         var factory = Factory(useCases)
@@ -59,10 +57,10 @@ class SampleListFragment : Fragment() {
         adapter.setRetryListener {
             viewModel.retry()
         }
-        viewModel.failure(this) { failure ->
+        viewModel.failure(this) {
 
         }
-        viewModel.success(this) { success ->
+        viewModel.success(this) {
 
         }
         observe(viewModel.pagedList) { pagedList ->
@@ -74,7 +72,7 @@ class SampleListFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         var binding: FragmentSampleListBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_sample_list, container, false)
         initializeView(binding)
-        return binding.root
+        return binding.swipeRefresh
     }
 
     private fun initializeView(binding: FragmentSampleListBinding) {

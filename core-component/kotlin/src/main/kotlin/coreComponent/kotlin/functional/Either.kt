@@ -1,4 +1,4 @@
-package coreComponent.kotlin
+package coreComponent.kotlin.functional
 
 
 /**

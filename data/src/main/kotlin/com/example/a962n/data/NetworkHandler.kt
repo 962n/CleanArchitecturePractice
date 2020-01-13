@@ -1,7 +1,6 @@
-package com.example.a962n.cleanarchitecturepractice.util
+package com.example.a962n.data
 
 import android.content.Context
-import com.example.a962n.cleanarchitecturepractice.extension.networkInfo
 import javax.inject.Inject
 import javax.inject.Singleton
 

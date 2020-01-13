@@ -1,7 +1,7 @@
 package com.example.a962n.cleanarchitecturepractice.dagger.samplelist
 
 
-import com.example.a962n.cleanarchitecturepractice.data.impl.SampleListNetworkDummy
+import com.example.a962n.data.repositoryImpl.SampleListNetworkDummy
 import com.example.a962n.domain.repository.SampleListRepository
 import com.example.a962n.cleanarchitecturepractice.presentation.SampleListActivity
 import dagger.Binds

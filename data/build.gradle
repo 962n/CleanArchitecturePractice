@@ -6,7 +6,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 28
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -22,12 +22,29 @@ android {
         }
     }
 
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
+    }
+
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation project(":core-component:kotlin")
+    implementation project(":domain")
+
     implementation 'com.android.support:appcompat-v7:28.0.0'
+
+    def javaxAnnotationVersion = '1.0'
+    implementation "javax.annotation:jsr250-api:$javaxAnnotationVersion"
+
+    def javaxInjectVersion = '1'
+    implementation "javax.inject:javax.inject:$javaxInjectVersion"
+
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

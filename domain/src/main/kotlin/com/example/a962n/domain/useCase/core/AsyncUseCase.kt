@@ -1,6 +1,6 @@
 package com.example.a962n.domain.useCase.core
 
-import coreComponent.kotlin.Either
+import coreComponent.kotlin.functional.Either
 import com.example.a962n.domain.exception.Failure
 import kotlinx.coroutines.*
 

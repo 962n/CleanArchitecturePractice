@@ -1,4 +1,4 @@
-package com.example.a962n.cleanarchitecturepractice.extension
+package com.example.a962n.data
 
 import android.content.Context
 import android.net.ConnectivityManager

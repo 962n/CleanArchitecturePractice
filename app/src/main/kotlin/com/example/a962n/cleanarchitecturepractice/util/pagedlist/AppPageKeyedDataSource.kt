@@ -1,7 +1,7 @@
 package com.example.a962n.cleanarchitecturepractice.util.pagedlist
 
 import android.arch.paging.PageKeyedDataSource
-import coreComponent.kotlin.Either
+import coreComponent.kotlin.functional.Either
 import com.example.a962n.domain.exception.Failure
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
