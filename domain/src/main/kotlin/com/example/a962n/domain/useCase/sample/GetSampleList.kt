@@ -9,8 +9,8 @@ import com.example.a962n.domain.useCase.core.UseCase
 class GetSampleList
 constructor(private val repository: SampleListRepository) : UseCase<List<SampleListEntity>, GetSampleList.Param>() {
 
-    override fun run(param: Param): Either<Failure, List<SampleListEntity>> {
-        return repository.list(param.offset, param.limit)
+    override fun run(params: Param): Either<Failure, List<SampleListEntity>> {
+        return repository.list(params.offset, params.limit)
     }
 
     data class Param(val offset: Int, val limit: Int)

@@ -22,11 +22,11 @@ class App : Application(), HasActivityInjector {
 
     override fun onCreate() {
         super.onCreate()
-        DaggerAppComponent
+        val builder = DaggerAppComponent
                 .builder()
                 .appModule(AppModule(this))
-                .build()
-                .inject(this)
+        builder.seedInstance(this)
+        builder.build().inject(this)
 
     }
 }
