@@ -1,8 +1,8 @@
 package com.example.a962n.cleanarchitecturepractice.presentation
 
-import android.databinding.DataBindingUtil
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.cleanarchitecturepractice.databinding.AdapterSampleListItemBinding

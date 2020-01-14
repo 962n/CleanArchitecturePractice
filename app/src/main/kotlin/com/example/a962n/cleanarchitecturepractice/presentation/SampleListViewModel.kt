@@ -1,8 +1,8 @@
 package com.example.a962n.cleanarchitecturepractice.presentation
 
-import android.arch.lifecycle.*
-import android.arch.paging.LivePagedListBuilder
-import android.arch.paging.PagedList
+import androidx.lifecycle.*
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.example.a962n.cleanarchitecturepractice.util.PendingLiveData
 import coreComponent.kotlin.functional.Either
 import com.example.a962n.domain.exception.Failure

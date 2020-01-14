@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.util.pagedlist
 
-import android.arch.paging.DataSource
+import androidx.paging.DataSource
 import com.example.a962n.cleanarchitecturepractice.util.pagedlist.AppPositionalDataSource.DataSourceListener
 
 class AppPositionalDataSourceFactory<T>

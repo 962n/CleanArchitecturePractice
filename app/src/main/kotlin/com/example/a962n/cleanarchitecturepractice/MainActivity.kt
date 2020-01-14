@@ -1,8 +1,8 @@
 package com.example.a962n.cleanarchitecturepractice
 
 import android.content.Intent
-import android.databinding.DataBindingUtil
-import android.support.v7.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.a962n.cleanarchitecturepractice.databinding.ActivityMainBinding
 import com.example.a962n.cleanarchitecturepractice.presentation.SampleListActivity

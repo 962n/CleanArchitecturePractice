@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.util
 
-import android.arch.lifecycle.*
+import androidx.lifecycle.*
 
 /**
  * 過去のデータ変更もオブザーバーに通知するLiveDataクラス
@@ -49,7 +49,7 @@ class PendingLiveData<T> : MutableLiveData<T>() {
         super.setValue(value)
     }
 
-    override fun observe(owner: LifecycleOwner, observer: Observer<T>) {
+    override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
         if (owner.lifecycle.currentState == Lifecycle.State.DESTROYED) {
             // ignore
             return
@@ -66,7 +66,7 @@ class PendingLiveData<T> : MutableLiveData<T>() {
     }
 
     override fun removeObservers(owner: LifecycleOwner) {
-        var deletes = observerHolders.filter { predicate -> predicate.owner == owner }
+        val deletes = observerHolders.filter { predicate -> predicate.owner == owner }
         observerHolders.removeAll(deletes)
         for (delete in deletes) {
             delete.owner.lifecycle.removeObserver(delete.lifecycleObserver)
@@ -74,8 +74,9 @@ class PendingLiveData<T> : MutableLiveData<T>() {
         super.removeObservers(owner)
     }
 
-    override fun removeObserver(observer: Observer<T>) {
-        var deletes = observerHolders.filter { predicate -> predicate.outerObserver == observer }
+
+    override fun removeObserver(observer: Observer<in T>) {
+        val deletes = observerHolders.filter { predicate -> predicate.outerObserver == observer }
         observerHolders.removeAll(deletes)
         for (delete in deletes) {
             delete.owner.lifecycle.removeObserver(delete.lifecycleObserver)
@@ -90,7 +91,7 @@ class PendingLiveData<T> : MutableLiveData<T>() {
      * @param version データ変更バージョン
      */
     private inner class ObserverHolder<T>
-    constructor(val owner: LifecycleOwner, val outerObserver: Observer<T>, var version: Int) {
+    constructor(val owner: LifecycleOwner, val outerObserver: Observer<in T>, var version: Int) {
 
         val innerObserver = Observer<T> {
             // HACK 最新の更新バージョンのデータをはじく(引数itが最新のデータのため)
@@ -102,10 +103,10 @@ class PendingLiveData<T> : MutableLiveData<T>() {
             outerObserver.onChanged(it)
         }
         val lifecycleObserver = object : GenericLifecycleObserver {
-            override fun onStateChanged(owner: LifecycleOwner?, event: Lifecycle.Event?) {
+            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
                 when (event) {
                     Lifecycle.Event.ON_DESTROY -> {
-                        owner?.let {
+                        owner.let {
                             owner.lifecycle.removeObserver(this)
                             observerHolders.removeAll { holder -> holder.innerObserver == innerObserver }
                         }

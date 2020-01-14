@@ -1,8 +1,8 @@
 package com.example.a962n.cleanarchitecturepractice.util
 
-import android.arch.lifecycle.*
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.FragmentManager
+import androidx.lifecycle.*
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 
 /**
  * ダイアログフラグメント表示コントロールクラス
@@ -55,10 +55,8 @@ class DialogController constructor(owner: LifecycleOwner) {
 
     /** ライフサイクルをチェックするためのオブザーバー */
     private val observer: GenericLifecycleObserver = object : GenericLifecycleObserver {
-
-        override fun onStateChanged(owner: LifecycleOwner?, event: Lifecycle.Event?) {
-
-            owner?.let {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            owner.let {
                 currentState = it.lifecycle.currentState
             }
 
@@ -67,7 +65,7 @@ class DialogController constructor(owner: LifecycleOwner) {
                     dequeue()
                 }
                 Lifecycle.Event.ON_DESTROY -> {
-                    owner?.let {
+                    owner.let {
                         it.lifecycle.removeObserver(this)
                         pendingQueue.clear()
                     }

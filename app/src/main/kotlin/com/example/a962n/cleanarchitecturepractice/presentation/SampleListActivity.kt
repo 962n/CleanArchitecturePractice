@@ -1,7 +1,7 @@
 package com.example.a962n.cleanarchitecturepractice.presentation
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.a962n.cleanarchitecturepractice.R
 import com.example.a962n.domain.repository.SampleListRepository
 import dagger.android.AndroidInjection

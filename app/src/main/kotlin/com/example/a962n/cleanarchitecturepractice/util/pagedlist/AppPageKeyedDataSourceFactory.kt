@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.util.pagedlist
 
-import android.arch.paging.DataSource
+import androidx.paging.DataSource
 
 class AppPageKeyedDataSourceFactory<K, T>
 constructor(private val listener: AppPageKeyedDataSource.DataSourceListener<K, T>) : DataSource.Factory<K, T>() {

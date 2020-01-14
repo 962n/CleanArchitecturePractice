@@ -1,6 +1,6 @@
 package com.example.a962n.cleanarchitecturepractice.util.pagedlist
 
-import android.arch.paging.PositionalDataSource
+import androidx.paging.PositionalDataSource
 import coreComponent.kotlin.functional.Either
 import com.example.a962n.domain.exception.Failure
 import kotlinx.coroutines.CoroutineScope
