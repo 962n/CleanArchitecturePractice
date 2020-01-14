@@ -67,9 +67,9 @@ fastlane/readme.md
 # Android Studio
 .gradle/
 .idea/
-gradle/
+#gradle/
 build/
-gradlew
-gradlew.bat
+#gradlew
+#gradlew.bat
 *.iml
 
