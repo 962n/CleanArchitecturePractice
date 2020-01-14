@@ -11,4 +11,9 @@ class EitherTest {
         Assert.assertTrue(either.isRight)
         Assert.assertFalse(either.isLeft)
     }
+
+    @Test
+    fun testForCircleCiTestFailed() {
+        Assert.assertTrue(false)
+    }
 }

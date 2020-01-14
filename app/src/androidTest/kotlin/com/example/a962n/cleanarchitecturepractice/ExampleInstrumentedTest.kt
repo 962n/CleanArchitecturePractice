@@ -21,4 +21,9 @@ class ExampleInstrumentedTest {
         val appContext = InstrumentationRegistry.getTargetContext()
         assertEquals("com.example.a962n.cleanarchitecturepractice", appContext.packageName)
     }
+    @Test
+    fun testForCircleCiTestFailed() {
+        assertTrue(false)
+    }
+
 }
